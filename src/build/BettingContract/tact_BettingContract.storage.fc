@@ -1,0 +1,229 @@
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline {
+    return (bounce, to, value, mode, body, code, data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_body_value_mode_code_data(slice to, cell body, int value, int mode, cell code, cell data) inline {
+    return (true, to, value, mode, body, code, data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_body_value_mode(slice to, cell body, int value, int mode) inline {
+    return (true, to, value, mode, body, null(), null());
+}
+
+;;
+;; Type: Deploy
+;; Header: 0x946a98b6
+;; TLB: deploy#946a98b6 queryId:uint64 = Deploy
+;;
+
+(slice, ((int))) $Deploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2490013878);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v) inline {
+    return $DeployOk$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int queryId) inline {
+    return (queryId);
+}
+
+;;
+;; Type: NewBet
+;; Header: 0xf5383c68
+;; TLB: new_bet#f5383c68 chosenTeam:^string hackatonPosition:uint16 buildLink:^string = NewBet
+;;
+
+(slice, ((slice, int, slice))) $NewBet$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 4114103400);
+    var v'chosenTeam = sc_0~load_ref().begin_parse();
+    var v'hackatonPosition = sc_0~load_uint(16);
+    var v'buildLink = sc_0~load_ref().begin_parse();
+    return (sc_0, (v'chosenTeam, v'hackatonPosition, v'buildLink));
+}
+
+;;
+;; Type: NewBetResponse
+;; Header: 0xc6eb0016
+;; TLB: new_bet_response#c6eb0016 seqno:uint32 = NewBetResponse
+;;
+
+builder $NewBetResponse$_store(builder build_0, (int) v) inline {
+    var (v'seqno) = v;
+    build_0 = store_uint(build_0, 3337289750, 32);
+    build_0 = build_0.store_uint(v'seqno, 32);
+    return build_0;
+}
+
+cell $NewBetResponse$_store_cell((int) v) inline {
+    return $NewBetResponse$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $NewBetResponse$_constructor_seqno(int seqno) inline {
+    return (seqno);
+}
+
+;;
+;; Type: CloseBet
+;; Header: 0xff04702a
+;; TLB: close_bet#ff04702a seqno:uint32 win:bool = CloseBet
+;;
+
+(slice, ((int, int))) $CloseBet$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 4278480938);
+    var v'seqno = sc_0~load_uint(32);
+    var v'win = sc_0~load_int(1);
+    return (sc_0, (v'seqno, v'win));
+}
+
+;;
+;; Type: InternalSetBet
+;; Header: 0x61cdc0c4
+;; TLB: internal_set_bet#61cdc0c4 chosenTeam:^string hackatonPosition:uint16 buildLink:^string owner:address = InternalSetBet
+;;
+
+builder $InternalSetBet$_store(builder build_0, (slice, int, slice, slice) v) inline {
+    var (v'chosenTeam, v'hackatonPosition, v'buildLink, v'owner) = v;
+    build_0 = store_uint(build_0, 1640874180, 32);
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'chosenTeam).end_cell());
+    build_0 = build_0.store_uint(v'hackatonPosition, 16);
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'buildLink).end_cell());
+    build_0 = __tact_store_address(build_0, v'owner);
+    return build_0;
+}
+
+cell $InternalSetBet$_store_cell((slice, int, slice, slice) v) inline {
+    return $InternalSetBet$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, slice, slice)) $InternalSetBet$_constructor_chosenTeam_hackatonPosition_buildLink_owner(slice chosenTeam, int hackatonPosition, slice buildLink, slice owner) inline {
+    return (chosenTeam, hackatonPosition, buildLink, owner);
+}
+
+;;
+;; Type: InternalCloseBet
+;; Header: 0xdccb7261
+;; TLB: internal_close_bet#dccb7261 excess:address = InternalCloseBet
+;;
+
+builder $InternalCloseBet$_store(builder build_0, (slice) v) inline {
+    var (v'excess) = v;
+    build_0 = store_uint(build_0, 3704320609, 32);
+    build_0 = __tact_store_address(build_0, v'excess);
+    return build_0;
+}
+
+cell $InternalCloseBet$_store_cell((slice) v) inline {
+    return $InternalCloseBet$_store(begin_cell(), v).end_cell();
+}
+
+((slice)) $InternalCloseBet$_constructor_excess(slice excess) inline {
+    return (excess);
+}
+
+;;
+;; Type: Bet
+;;
+
+builder $Bet$init$_store(builder build_0, (slice, int, slice) v) inline {
+    var (v'parent, v'seqno, v'owner) = v;
+    build_0 = __tact_store_address(build_0, v'parent);
+    build_0 = build_0.store_int(v'seqno, 257);
+    build_0 = __tact_store_address(build_0, v'owner);
+    return build_0;
+}
+
+(cell, cell) $Bet$_init_child(cell sys', slice $parent, int $seqno, slice $owner) inline_ref {
+    slice sc' = sys'.begin_parse();
+    cell source = sc'~load_dict();
+    cell contracts = new_dict();
+    
+    ;; Contract Code: Bet
+    cell mine = __tact_dict_get_code(source, 47361);
+    contracts = __tact_dict_set_code(contracts, 47361, mine);
+    
+    ;; Build cell
+    builder b = begin_cell();
+    b = b.store_ref(begin_cell().store_dict(contracts).end_cell());
+    b = b.store_int(false, 1);
+    b = $Bet$init$_store(b, ($parent, $seqno, $owner));
+    return (mine, b.end_cell());
+}
+
+;;
+;; Type: BettingContract
+;;
+
+builder $BettingContract$_store(builder build_0, (int, slice, int) v) inline {
+    var (v'id, v'owner, v'betsCounter) = v;
+    build_0 = build_0.store_uint(v'id, 16);
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = build_0.store_uint(v'betsCounter, 32);
+    return build_0;
+}
+
+(slice, ((int, slice, int))) $BettingContract$_load(slice sc_0) inline {
+    var v'id = sc_0~load_uint(16);
+    var v'owner = sc_0~__tact_load_address();
+    var v'betsCounter = sc_0~load_uint(32);
+    return (sc_0, (v'id, v'owner, v'betsCounter));
+}
+
+(slice, ((int))) $BettingContract$init$_load(slice sc_0) inline {
+    var v'id = sc_0~load_int(257);
+    return (sc_0, (v'id));
+}
+
+(int, slice, int) $BettingContract$_contract_load() impure inline_ref {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$BettingContract$_load();
+    } else {
+        ;; Allow only workchain deployments
+        throw_unless(137, my_address().preload_uint(11) == 1024);
+        (int id) = $sc~$BettingContract$init$_load();
+        $sc.end_parse();
+        return $BettingContract$_contract_init(id);
+    }
+}
+
+() $BettingContract$_contract_store((int, slice, int) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $BettingContract$_store(b, v);
+    set_data(b.end_cell());
+}

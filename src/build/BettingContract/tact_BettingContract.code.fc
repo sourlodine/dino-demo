@@ -1,0 +1,176 @@
+#pragma version =0.4.4;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+#include "tact_BettingContract.headers.fc";
+#include "tact_BettingContract.stdlib.fc";
+#include "tact_BettingContract.storage.fc";
+
+;;
+;; Contract BettingContract functions
+;;
+
+(int, slice, int) $BettingContract$_contract_init(int $id) impure inline_ref {
+    var (($self'id, $self'owner, $self'betsCounter)) = (null(), null(), null());
+    $self'owner = __tact_context_get_sender();
+    $self'betsCounter = 0;
+    $self'id = $id;
+    return ($self'id, $self'owner, $self'betsCounter);
+}
+
+((int, slice, int), int) $BettingContract$_fun_betsCounter((int, slice, int) $self) impure inline_ref {
+    var (($self'id, $self'owner, $self'betsCounter)) = $self;
+    return (($self'id, $self'owner, $self'betsCounter), $self'betsCounter);
+}
+
+((int, slice, int), slice) $BettingContract$_fun_betAdress((int, slice, int) $self, int $seqno) impure inline_ref {
+    var (($self'id, $self'owner, $self'betsCounter)) = $self;
+    return (($self'id, $self'owner, $self'betsCounter), $global_contractAddress($Bet$_init_child(__tact_context_sys, my_address(), $seqno, __tact_context_get_sender())));
+}
+
+((int, slice, int), ()) $BettingContract$_fun_requireOwner((int, slice, int) $self) impure inline_ref {
+    var (($self'id, $self'owner, $self'betsCounter)) = $self;
+    throw_unless(132, ( __tact_slice_eq_bits($self'owner, __tact_context_get_sender()) ));
+    return (($self'id, $self'owner, $self'betsCounter), ());
+}
+
+((int, slice, int), slice) $BettingContract$_fun_owner((int, slice, int) $self) impure inline_ref {
+    var (($self'id, $self'owner, $self'betsCounter)) = $self;
+    return (($self'id, $self'owner, $self'betsCounter), $self'owner);
+}
+
+;;
+;; Receivers of a Contract BettingContract
+;;
+
+(((int, slice, int)), ()) $BettingContract$_internal_binary_NewBet((int, slice, int) $self, (slice, int, slice) $msg) impure inline {
+    var ($self'id, $self'owner, $self'betsCounter) = $self;
+    var ($msg'chosenTeam, $msg'hackatonPosition, $msg'buildLink) = $msg;
+    $self'betsCounter = ($self'betsCounter + 1);
+    var ($init'code, $init'data) = $Bet$_init_child(__tact_context_sys, my_address(), $self'betsCounter, __tact_context_get_sender());
+    $global_send($SendParameters$_constructor_to_body_value_mode_code_data($global_contractAddress(($init'code, $init'data)), $InternalSetBet$_store_cell($InternalSetBet$_constructor_chosenTeam_hackatonPosition_buildLink_owner($msg'chosenTeam, $msg'hackatonPosition, $msg'buildLink, __tact_context_get_sender())), 200000000, 2, $init'code, $init'data));
+    ($self'id, $self'owner, $self'betsCounter)~$BettingContract$_fun_reply($NewBetResponse$_store_cell($NewBetResponse$_constructor_seqno($self'betsCounter)));
+    return (($self'id, $self'owner, $self'betsCounter), ());
+}
+
+(((int, slice, int)), ()) $BettingContract$_internal_binary_CloseBet((int, slice, int) $self, (int, int) $msg) impure inline {
+    var ($self'id, $self'owner, $self'betsCounter) = $self;
+    var ($msg'seqno, $msg'win) = $msg;
+    ($self'id, $self'owner, $self'betsCounter)~$BettingContract$_fun_requireOwner();
+    throw_unless(58487, ($msg'seqno <= $self'betsCounter));
+    $global_send($SendParameters$_constructor_to_body_value_mode($global_contractAddress($Bet$_init_child(__tact_context_sys, my_address(), $msg'seqno, __tact_context_get_sender())), $InternalCloseBet$_store_cell($InternalCloseBet$_constructor_excess(__tact_context_get_sender())), 0, 66));
+    return (($self'id, $self'owner, $self'betsCounter), ());
+}
+
+(((int, slice, int)), ()) $BettingContract$_internal_binary_Deploy((int, slice, int) $self, (int) $deploy) impure inline {
+    var ($self'id, $self'owner, $self'betsCounter) = $self;
+    var ($deploy'queryId) = $deploy;
+    ($self'id, $self'owner, $self'betsCounter)~$BettingContract$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'id, $self'owner, $self'betsCounter), ());
+}
+
+;;
+;; Get methods of a Contract BettingContract
+;;
+
+_ %betsCounter() method_id(97496) {
+    var self = $BettingContract$_contract_load();
+    var res = self~$BettingContract$_fun_betsCounter();
+    return res;
+}
+
+_ %betAdress(int $$seqno) method_id(118257) {
+    int $seqno = $$seqno;
+    var self = $BettingContract$_contract_load();
+    var res = self~$BettingContract$_fun_betAdress($seqno);
+    return res;
+}
+
+_ %owner() method_id(83229) {
+    var self = $BettingContract$_contract_load();
+    var res = self~$BettingContract$_fun_owner();
+    return res;
+}
+
+_ supported_interfaces() method_id {
+    return (
+        "org.ton.introspection.v0"H >> 128,
+        "org.ton.abi.ipfs.v0"H >> 128,
+        "org.ton.deploy.lazy.v0"H >> 128,
+        "org.ton.debug.v0"H >> 128,
+        "org.ton.chain.workchain.v0"H >> 128,
+        "org.ton.ownable"H >> 128
+    );
+}
+
+_ get_abi_ipfs() method_id {
+    return "ipfs://QmcLEXz9AfXeA3yUhWH6tPmW8Qc9sa1vzRUJMw7uxvgHXP";
+}
+
+_ lazy_deployment_completed() method_id {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract BettingContract
+;;
+
+((int, slice, int), int) $BettingContract$_contract_router_internal((int, slice, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    
+    ;; Receive NewBet message
+    if (op == 4114103400) {
+        var msg = in_msg~$NewBet$_load();
+        self~$BettingContract$_internal_binary_NewBet(msg);
+        return (self, true);
+    }
+    
+    ;; Receive CloseBet message
+    if (op == 4278480938) {
+        var msg = in_msg~$CloseBet$_load();
+        self~$BettingContract$_internal_binary_CloseBet(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Deploy message
+    if (op == 2490013878) {
+        var msg = in_msg~$Deploy$_load();
+        self~$BettingContract$_internal_binary_Deploy(msg);
+        return (self, true);
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = -(msg_flags & 1);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $BettingContract$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$BettingContract$_contract_router_internal(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(130, handled);
+    
+    ;; Persist state
+    $BettingContract$_contract_store(self);
+}
