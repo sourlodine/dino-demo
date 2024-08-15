@@ -1,9 +1,9 @@
 {
-  "name": "bets-client",
+  "name": "dino-demo",
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "homepage": "https://rodiontazetdinov.github.io/bets-client",
+  "homepage": "https://sourlodine.github.io/dino-demo",
   "scripts": {
     "deploy": "gh-pages -d dist",
     "dev": "vite",
