@@ -1,5 +1,5 @@
 import { useEffect, useState, type FC } from "react";
-import cls from 'classnames';
+import cls from "classnames";
 
 import rocketIcon from "../../assets/rocket.png";
 import { useTonConnect } from "@/hooks/useTonConnect";
@@ -12,13 +12,7 @@ interface TeamProps {
   place: string;
 }
 
-export const Team: FC<TeamProps> = ({
-  teamName,
-  teamLink,
-  teamMVP,
-  teamTrack,
-  place,
-}) => {
+export const Team: FC<TeamProps> = ({ teamName, teamLink, teamMVP, place }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { connected } = useTonConnect();
 
@@ -78,7 +72,7 @@ export const Team: FC<TeamProps> = ({
             className={cls({
               "flex items-center justify-center gap-2": true,
               "text-[18px] font-bold text-white": !connected,
-              
+
               "border border-white rounded-full": !connected,
               "border border-sky-500 rounded-full": connected,
               "text-[18px] font-bold text-sky-500": connected,
